@@ -1,0 +1,190 @@
+/* ─────────────────────────────────────────────
+   The Legacy museum
+   ───────────────────────────────────────────── */
+
+.museum-stage {
+  position: relative;
+  height: calc(100svh - 72px);
+  min-height: 520px;
+  overflow: hidden;
+  touch-action: pan-y; /* sideways swipes walk the hall */
+  background: var(--wall);
+}
+
+.museum-stage canvas {
+  display: block;
+}
+
+/* text panels float over the hall */
+.museum-welcome,
+.museum-card {
+  position: absolute;
+  left: var(--page-x);
+  max-width: 440px;
+  padding: clamp(20px, 3vw, 32px);
+  background: color-mix(in srgb, var(--wall) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  animation: museum-in 0.5s ease-out;
+}
+
+.museum-welcome {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.museum-card {
+  bottom: 96px;
+}
+
+.museum-kicker {
+  color: var(--brass);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.museum-welcome h2,
+.museum-card h2 {
+  margin: 8px 0 10px;
+  font-size: var(--step-3);
+  line-height: 1.1;
+}
+
+.museum-welcome p,
+.museum-card p {
+  color: var(--stone);
+  line-height: 1.6;
+}
+
+.museum-welcome .primary-button,
+.museum-card .secondary-button {
+  margin-top: 20px;
+}
+
+.museum-help {
+  margin-top: 14px;
+  font-size: var(--step--1);
+}
+
+.museum-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 8px 10px;
+  background: color-mix(in srgb, var(--wall) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--stone);
+}
+
+.museum-controls .icon-button {
+  border-radius: 50%;
+}
+
+.museum-controls .icon-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.museum-controls span {
+  min-width: 70px;
+  text-align: center;
+}
+
+@keyframes museum-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .museum-stage {
+    height: calc(100svh - 64px);
+  }
+
+  .museum-welcome,
+  .museum-card {
+    left: 16px;
+    right: 16px;
+    max-width: none;
+  }
+
+  .museum-card {
+    bottom: 88px;
+    padding: 16px 18px;
+  }
+
+  .museum-card h2 {
+    font-size: var(--step-2);
+  }
+
+  .museum-card p:not(.museum-kicker) {
+    display: none; /* keep the portrait visible on small screens */
+  }
+
+  .museum-card .secondary-button {
+    margin-top: 10px;
+  }
+}
+
+/* the audio guide switch sits with the walking controls */
+.museum-guide {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  margin-left: 4px;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--stone);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.museum-guide:hover {
+  color: var(--ivory);
+}
+
+.museum-guide.on {
+  color: var(--ivory);
+  border-color: var(--brass);
+  background: var(--brass-soft);
+}
+
+@media (max-width: 640px) {
+  .museum-controls {
+    gap: 8px;
+  }
+
+  .museum-controls span:not([aria-hidden]) {
+    min-width: 58px;
+  }
+
+  /* just the headphones icon on small screens */
+  .museum-guide {
+    padding: 0 12px;
+    margin-left: 0;
+  }
+
+  .museum-guide-text {
+    display: none;
+  }
+}

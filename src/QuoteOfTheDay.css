@@ -1,0 +1,55 @@
+/* ─────────────────────────────────────────────
+   Quote of the day
+   ───────────────────────────────────────────── */
+
+.quote-of-day {
+  padding: clamp(64px, 8vw, 112px) var(--page-x);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+}
+
+.quote-of-day-label {
+  color: var(--brass);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quote-of-day blockquote {
+  max-width: 24ch;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--step-3);
+  line-height: 1.2;
+  color: var(--ivory);
+  text-wrap: balance;
+}
+
+.quote-of-day figcaption {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+  text-align: left;
+  font-size: var(--step--1);
+  color: var(--stone);
+}
+
+.quote-of-day figcaption img {
+  width: 44px;
+  height: 50px;
+  object-fit: cover;
+  padding: 2px;
+  border: 1px solid var(--brass);
+}
+
+.quote-of-day figcaption strong {
+  display: block;
+  color: var(--ivory);
+  font-weight: 600;
+}

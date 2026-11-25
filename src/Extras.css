@@ -1,0 +1,232 @@
+/* ─────────────────────────────────────────────
+   LEGACY — menu, loader, back-to-top, states
+   ───────────────────────────────────────────── */
+
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Hamburger ─────────────────────────────── */
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0 11px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.menu-toggle span {
+  display: block;
+  height: 1.5px;
+  width: 100%;
+  background: var(--ivory);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.menu-toggle.open span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ── Mobile menu ───────────────────────────── */
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--page-x);
+  background: var(--wall);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-menu.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-menu a {
+  font-family: var(--serif);
+  font-size: clamp(36px, 10vw, 52px);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--stone);
+}
+
+.mobile-menu a.active,
+.mobile-menu a:hover {
+  color: var(--ivory);
+}
+
+/* seven page links need room; below this width they move into the menu */
+@media (max-width: 1180px) {
+  .nav-links {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-right .nav-button {
+    display: none;
+  }
+}
+
+/* ── Loader ────────────────────────────────── */
+
+.legacy-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: var(--wall);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.legacy-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.legacy-loader .logo {
+  font-size: 56px;
+}
+
+.legacy-loader-bar {
+  width: 120px;
+  height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.legacy-loader-bar i {
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: var(--brass);
+  animation: loaderSlide 1.1s ease-in-out infinite;
+}
+
+@keyframes loaderSlide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(260%); }
+}
+
+/* ── Back to top ───────────────────────────── */
+
+.back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 80;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--plinth);
+  border: 1px solid var(--line);
+  color: var(--ivory);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease, border-color 0.2s ease;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top:hover {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+/* ── Favourites ────────────────────────────── */
+
+.favourite-button.saved {
+  border-color: var(--brass);
+  color: var(--brass);
+  background: var(--brass-soft);
+}
+
+/* ── Empty gallery ─────────────────────────── */
+
+.gallery-empty {
+  max-width: 480px;
+  margin: 48px auto 0;
+  padding: 56px 28px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+.gallery-empty h3 {
+  font-size: var(--step-2);
+  margin-bottom: 10px;
+}
+
+.gallery-empty p {
+  color: var(--stone);
+}
+
+/* ── Pages ─────────────────────────────────── */
+
+/* each page fades in gently when you switch to it */
+.page {
+  min-height: calc(100svh - 72px - 160px); /* short pages still push the footer down */
+  animation: page-in 0.45s ease-out;
+}
+
+/* the first section of every page sits right under the navbar */
+.page > section:first-child,
+.page > :first-child {
+  border-top: none;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* holds the space while a page's code arrives */
+.page-loading {
+  min-height: calc(100svh - 72px);
+}

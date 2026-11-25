@@ -1,0 +1,124 @@
+/* ─────────────────────────────────────────────
+   LEGACY design tokens
+   A museum after hours: blue-black walls,
+   ivory text, brass details.
+   ───────────────────────────────────────────── */
+:root {
+  --wall: #0f1117;        /* page background */
+  --plinth: #161922;      /* raised surfaces */
+  --plinth-2: #1c2029;    /* hover / inputs */
+  --line: #2a2e3a;        /* hairlines and borders */
+  --ivory: #ece6d9;       /* main text */
+  --stone: #9b978d;       /* secondary text */
+  --brass: #c6a15b;       /* the one accent */
+  --brass-soft: rgba(198, 161, 91, 0.14);
+  --brass-hover: #d4b06c;
+  --shine: #f6e2b3;       /* the bright gold in highlighted words */
+  --on-brass: #17130b;    /* text on brass buttons */
+
+  --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Manrope', 'Segoe UI', system-ui, sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.75rem;
+  --step-3: clamp(2.25rem, 4vw, 3.25rem);
+  --step-4: clamp(3.25rem, 8vw, 6.5rem);
+
+  --page-x: clamp(20px, 6vw, 96px);
+  --section-y: clamp(80px, 11vw, 140px);
+  --radius: 4px;
+
+  color-scheme: dark;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ivory);
+  background: var(--wall);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light theme: the same museum by daylight — parchment walls,
+   ink text, a deeper brass so it still reads on a pale page. */
+:root[data-theme='light'] {
+  --wall: #f5f1e8;
+  --plinth: #ece6d8;
+  --plinth-2: #e3dccb;
+  --line: #d3c9b5;
+  --ivory: #1c1a16;
+  --stone: #5c574c;
+  --brass: #8a6726;
+  --brass-soft: rgba(138, 103, 38, 0.12);
+  --brass-hover: #74561f;
+  --shine: #c8963a;
+  --on-brass: #fbf7ee;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  background: var(--wall);
+}
+
+#root {
+  width: 100%;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

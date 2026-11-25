@@ -1,0 +1,668 @@
+/* ─────────────────────────────────────────────
+   LEGACY — layout and components
+   Tokens live in index.css
+   ───────────────────────────────────────────── */
+
+.legacy {
+  background: var(--wall);
+  overflow-x: clip;
+}
+
+/* ── Shared type ───────────────────────────── */
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  color: var(--ivory);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.section-head {
+  max-width: 640px;
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
+.section-head.centered {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.section-head h2 {
+  font-size: var(--step-3);
+  margin-bottom: 14px;
+}
+
+.section-head p {
+  color: var(--stone);
+  font-size: var(--step-0);
+  max-width: 52ch;
+}
+
+.section-head.centered p {
+  margin: 0 auto;
+}
+
+/* ── Buttons ───────────────────────────────── */
+
+.primary-button,
+.secondary-button,
+.nav-button,
+.back-button,
+.favourite-button,
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: var(--radius);
+  font-family: var(--sans);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.primary-button {
+  background: var(--brass);
+  border: 1px solid var(--brass);
+  color: var(--on-brass);
+}
+
+.primary-button:hover {
+  background: var(--brass-hover);
+  border-color: var(--brass-hover);
+}
+
+.secondary-button,
+.nav-button,
+.back-button,
+.favourite-button,
+.icon-button {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ivory);
+}
+
+.secondary-button:hover,
+.nav-button:hover,
+.back-button:hover,
+.favourite-button:hover,
+.icon-button:hover {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+.icon-button {
+  width: 44px;
+  padding: 0;
+  font-size: var(--step-1);
+}
+
+/* ── Navigation ────────────────────────────── */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 72px;
+  padding: 0 var(--page-x);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: color-mix(in srgb, var(--wall) 86%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  font-family: var(--serif);
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ivory);
+}
+
+.logo span {
+  color: var(--brass);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  font-size: var(--step--1);
+  font-weight: 500;
+}
+
+.nav-links a {
+  position: relative;
+  padding: 6px 0;
+  color: var(--stone);
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--ivory);
+}
+
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--brass);
+}
+
+/* ── Hero ──────────────────────────────────── */
+
+.hero-section {
+  position: relative;
+  min-height: calc(100svh - 72px);
+  padding: clamp(60px, 10vh, 120px) var(--page-x) 120px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: 40px;
+  background:
+    radial-gradient(ellipse 60% 70% at 78% 45%, rgba(198, 161, 91, 0.08), transparent 70%),
+    var(--wall);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-size: var(--step-4);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.line {
+  display: block;
+}
+
+.hero-description {
+  margin-top: 28px;
+  max-width: 46ch;
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--stone);
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.hero-visual {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 520px;
+  justify-self: center;
+}
+
+.hero-bottom {
+  position: absolute;
+  left: var(--page-x);
+  right: var(--page-x);
+  bottom: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: var(--step--1);
+  color: var(--stone);
+}
+
+/* globe: birthplace pins */
+.globe-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  text-align: center;
+  font-size: var(--step--1);
+  color: var(--stone);
+}
+
+.globe-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--wall) 92%, transparent);
+  border: 1px solid var(--brass);
+  border-radius: var(--radius);
+  transform: translateY(-70%);
+}
+
+.globe-label strong {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ivory);
+}
+
+.globe-label span {
+  font-size: 12px;
+  color: var(--stone);
+}
+
+.scene-loading {
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-loading {
+  min-height: 900px;
+}
+
+/* ── Fields ────────────────────────────────── */
+
+.explore-section {
+  padding: clamp(56px, 7vw, 88px) var(--page-x);
+  border-top: 1px solid var(--line);
+}
+
+.explore-section .section-head {
+  margin-bottom: 28px;
+}
+
+.field-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.field-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: var(--plinth);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.field-row::before {
+  content: '';
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--field-color);
+}
+
+.field-name {
+  flex: 1;
+  font-family: var(--serif);
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--ivory);
+  transition: color 0.2s ease;
+}
+
+.field-count {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--stone);
+}
+
+.field-row:hover,
+.field-row:focus-visible {
+  border-color: var(--field-color);
+  transform: translateY(-2px);
+}
+
+.field-row:hover .field-name,
+.field-row:focus-visible .field-name {
+  color: var(--brass);
+}
+
+/* ── Gallery ───────────────────────────────── */
+
+.personality-section {
+  padding: var(--section-y) var(--page-x);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  background:
+    radial-gradient(ellipse 50% 45% at 50% 55%, rgba(198, 161, 91, 0.06), transparent 70%),
+    var(--wall);
+}
+
+.gallery-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* ── Filter tabs (gallery + timeline) ──────── */
+/* The same underlined tabs on both pages: a colour dot for each field,
+   the name, and how many legends it holds. */
+
+.filter-tabs {
+  display: flex;
+  gap: clamp(18px, 2.6vw, 32px);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.filter-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-tabs button {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 10px 0 14px;
+  background: none;
+  border: none;
+  color: var(--stone);
+  font-size: var(--step-0);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter-tabs button:hover,
+.filter-tabs button.active {
+  color: var(--ivory);
+}
+
+.filter-tabs button.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--brass);
+}
+
+.filter-tabs button i {
+  align-self: center;
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  font-style: normal;
+}
+
+/* the heart on "Favourites" sits where the colour dot would */
+.filter-tabs button i.filter-heart {
+  width: auto;
+  height: auto;
+  color: var(--brass);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.filter-count {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--stone);
+}
+
+.filter-tabs button.active .filter-count {
+  color: var(--brass);
+}
+
+.personality-search {
+  width: min(420px, 100%);
+}
+
+.personality-search input {
+  width: 100%;
+  height: 48px;
+  padding: 0 18px;
+  background: var(--plinth);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ivory);
+}
+
+.personality-search input::placeholder {
+  color: var(--stone);
+}
+
+.personality-search input:focus {
+  outline: none;
+  border-color: var(--brass);
+}
+
+.gallery-canvas {
+  width: 100%;
+  height: clamp(320px, 44vw, 460px);
+  margin-top: 36px;
+  touch-action: pan-y; /* sideways swipes go to the gallery, not the page */
+}
+
+.gallery-meta {
+  margin-top: 8px;
+}
+
+.gallery-meta h3 {
+  font-size: var(--step-3);
+  font-weight: 500;
+}
+
+.gallery-role {
+  margin-top: 8px;
+  color: var(--stone);
+}
+
+.gallery-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 28px;
+}
+
+.gallery-count {
+  min-width: 70px;
+  color: var(--stone);
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+}
+
+.gallery-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+/* ── About ─────────────────────────────────── */
+
+.about-section {
+  padding: var(--section-y) var(--page-x);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.about-section h2 {
+  font-size: var(--step-3);
+  font-weight: 500;
+}
+
+.about-section p {
+  max-width: 56ch;
+  color: var(--stone);
+  font-size: var(--step-1);
+  line-height: 1.65;
+}
+
+/* ── Footer ────────────────────────────────── */
+
+footer {
+  padding: 48px var(--page-x);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: var(--step--1);
+}
+
+footer nav a {
+  color: var(--stone);
+}
+
+footer nav a:hover {
+  color: var(--ivory);
+}
+
+footer p {
+  width: 100%;
+  color: var(--stone);
+  font-size: var(--step--1);
+}
+
+/* ── Responsive ────────────────────────────── */
+
+@media (max-width: 1000px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+    padding-bottom: 140px;
+  }
+
+  /* the globe sits under the text instead of behind it,
+     so the words stay readable and the pins stay clickable */
+  .hero-visual {
+    width: min(100%, 460px);
+    margin-bottom: 40px;
+  }
+
+  .about-section {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    height: 64px;
+  }
+
+  .navbar .logo {
+    font-size: 34px;
+  }
+
+  .field-row {
+    gap: 8px;
+    padding: 14px 12px;
+  }
+
+  .field-name {
+    min-width: 0;
+    font-size: var(--step-0);
+  }
+
+  .hero-section {
+    min-height: auto;
+    padding-top: 72px;
+  }
+
+  .hero-bottom {
+    bottom: 28px;
+  }
+
+  .hero-buttons a {
+    flex: 1 1 auto;
+  }
+}
+
+/* ── The word "legacy": gold that catches the light ─── */
+
+.legacy-word,
+.logo {
+  background: linear-gradient(
+    100deg,
+    var(--brass) 0%,
+    var(--shine) 22%,
+    var(--brass) 44%,
+    var(--brass) 100%
+  );
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: legacy-shine 7s ease-in-out infinite;
+}
+
+.legacy-word {
+  font-style: italic;
+  font-weight: 600;
+  padding-right: 0.06em; /* italic letters lean past their box */
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--brass) 35%, transparent));
+}
+
+/* the dot after the logo keeps its solid brass */
+.logo span {
+  -webkit-text-fill-color: var(--brass);
+}
+
+@keyframes legacy-shine {
+  0%,
+  55% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legacy-word,
+  .logo {
+    animation: none;
+    background-position: 30% 0;
+  }
+}

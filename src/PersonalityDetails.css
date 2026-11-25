@@ -1,0 +1,533 @@
+/* ─────────────────────────────────────────────
+   Biography page — a single museum placard
+   ───────────────────────────────────────────── */
+
+.details-page {
+  padding: 40px var(--page-x) var(--section-y);
+  border-top: 1px solid var(--line);
+  background:
+    radial-gradient(ellipse 45% 50% at 22% 35%, rgba(198, 161, 91, 0.07), transparent 70%),
+    var(--wall);
+}
+
+.details-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.details-actions-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.details-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+  margin-top: 48px;
+}
+
+/* the portrait hangs in a thin brass frame */
+.details-image {
+  justify-self: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.details-image img {
+  width: 100%;
+  aspect-ratio: 7 / 8;
+  object-fit: cover;
+  padding: 12px;
+  background: var(--plinth);
+  border: 1px solid var(--brass);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.details-image figcaption {
+  margin-top: 14px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--step-1);
+  color: var(--stone);
+  text-align: center;
+}
+
+.details-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--brass);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.living-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+  color: var(--ivory);
+  font-weight: 500;
+}
+
+.living-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+
+.details-content h1 {
+  margin-top: 14px;
+  font-size: clamp(2.75rem, 6vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.details-title {
+  margin-top: 12px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--step-2);
+  line-height: 1.25;
+  color: var(--ivory);
+}
+
+.details-description {
+  margin-top: 20px;
+  max-width: 56ch;
+  font-size: var(--step-1);
+  line-height: 1.6;
+  color: var(--stone);
+}
+
+.listen {
+  margin-top: 24px;
+}
+
+.listen-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.listen-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.listen-settings label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--step--1);
+  color: var(--stone);
+}
+
+.listen-settings select {
+  height: 36px;
+  max-width: 260px;
+  padding: 0 32px 0 12px;
+  appearance: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23c6a15b' stroke-width='1.4'/%3E%3C/svg%3E")
+      no-repeat right 12px center,
+    var(--plinth);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ivory);
+  font-size: var(--step--1);
+  cursor: pointer;
+}
+
+.listen-settings select:hover,
+.listen-settings select:focus {
+  border-color: var(--brass);
+  outline: none;
+}
+
+.listen-settings option {
+  background: var(--plinth);
+}
+
+.listen-stop {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--stone);
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.listen-stop:hover {
+  color: var(--ivory);
+}
+
+.listen-wave {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.listen-wave i {
+  width: 3px;
+  height: 100%;
+  background: var(--brass);
+  border-radius: 2px;
+  animation: listenWave 0.9s ease-in-out infinite;
+}
+
+.listen-wave i:nth-child(2) { animation-delay: 0.15s; }
+.listen-wave i:nth-child(3) { animation-delay: 0.3s; }
+.listen-wave i:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes listenWave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.details-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 36px;
+  border-top: 1px solid var(--line);
+}
+
+.details-info div {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.details-info div:nth-child(odd) {
+  padding-right: 20px;
+}
+
+.details-info dt {
+  font-size: var(--step--1);
+  color: var(--stone);
+}
+
+.details-info dd {
+  margin-top: 4px;
+  color: var(--ivory);
+}
+
+/* three short chapters of the story */
+.biography-section {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 56px);
+  margin-top: clamp(72px, 9vw, 120px);
+}
+
+.biography-section article {
+  padding-top: 22px;
+  border-top: 1px solid var(--brass);
+}
+
+.biography-section h2 {
+  font-size: var(--step-2);
+  margin-bottom: 14px;
+}
+
+.biography-section p {
+  color: var(--stone);
+  line-height: 1.7;
+}
+
+/* key moments */
+.timeline-section {
+  max-width: 760px;
+  margin-top: clamp(72px, 9vw, 120px);
+}
+
+.timeline-section h2 {
+  font-size: var(--step-3);
+  margin-bottom: 36px;
+}
+
+.timeline {
+  list-style: none;
+  border-left: 1px solid var(--line);
+  margin-left: 6px;
+}
+
+.timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 20px;
+  padding: 0 0 30px 32px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--wall);
+  border: 1px solid var(--brass);
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-year {
+  font-family: var(--serif);
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--brass);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.timeline-item p {
+  color: var(--ivory);
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .details-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .details-image {
+    max-width: 340px;
+  }
+
+  .biography-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .details-info {
+    grid-template-columns: 1fr;
+  }
+
+  .details-info div:nth-child(odd) {
+    padding-right: 0;
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* ── Their own words ───────────────────────── */
+
+.details-quote {
+  max-width: 880px;
+  margin: clamp(64px, 8vw, 110px) auto 0;
+  text-align: center;
+}
+
+.details-quote blockquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.25;
+  color: var(--ivory);
+}
+
+.details-quote figcaption {
+  margin-top: 18px;
+  font-size: var(--step--1);
+  color: var(--brass);
+  letter-spacing: 0.02em;
+}
+
+/* ── About this photo ──────────────────────── */
+
+.photo-open {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: zoom-in;
+}
+
+.photo-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  transform: translate(-50%, 6px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--wall) 85%, transparent);
+  border: 1px solid var(--brass);
+  color: var(--ivory);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.photo-open:hover .photo-hint,
+.photo-open:focus-visible .photo-hint {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* touch screens have no hover, so the hint always shows there */
+@media (hover: none) {
+  .photo-hint {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.photo-dialog {
+  width: min(760px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: 0;
+  background: var(--plinth);
+  color: var(--ivory);
+  border: 1px solid var(--brass);
+  border-radius: var(--radius);
+}
+
+.photo-dialog::backdrop {
+  background: rgba(5, 6, 9, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.photo-dialog[open] {
+  animation: photo-dialog-in 0.3s ease-out;
+}
+
+@keyframes photo-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+.photo-dialog-inner {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 36px);
+  padding: clamp(20px, 4vw, 36px);
+}
+
+.photo-dialog-inner > img {
+  width: 100%;
+  aspect-ratio: 7 / 8;
+  object-fit: cover;
+  padding: 6px;
+  background: var(--wall);
+  border: 1px solid var(--line);
+}
+
+.photo-dialog-label {
+  color: var(--brass);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.photo-dialog h2 {
+  margin: 6px 0 18px;
+  font-size: var(--step-2);
+}
+
+.photo-dialog dl {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.photo-dialog dt {
+  font-size: var(--step--1);
+  color: var(--stone);
+}
+
+.photo-dialog dd {
+  font-weight: 600;
+}
+
+.photo-dialog-story {
+  color: var(--stone);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 600px) {
+  .photo-dialog-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-dialog-inner > img {
+    width: 140px;
+  }
+}
+
+/* ── Living portraits ──────────────────────── */
+/* the portrait leans towards the mouse; useTilt sets the variables */
+
+.details-image {
+  perspective: 1000px;
+}
+
+.living-portrait {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.living-portrait.tilting {
+  transition: transform 0.12s ease-out;
+}
+
+/* a soft gleam across the glass, following the light */
+.living-portrait::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--gx, 50%) var(--gy, 30%),
+    rgba(255, 244, 220, 0.22),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  mix-blend-mode: soft-light;
+}
+
+.living-portrait.tilting::after {
+  opacity: 1;
+}
+
+/* the "About this photo" hint floats a little in front of the picture */
+.living-portrait .photo-hint {
+  transform: translate(-50%, 6px) translateZ(30px);
+}
+
+.living-portrait:hover .photo-hint,
+.living-portrait:focus-visible .photo-hint {
+  transform: translate(-50%, 0) translateZ(30px);
+}
