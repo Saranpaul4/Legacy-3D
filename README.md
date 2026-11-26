@@ -2,6 +2,15 @@
 
 **Every life leaves a Legacy.** An interactive archive of 32 people who changed the world — scientists, leaders, artists, innovators, entertainers and sports legends — told through a 3D globe, a walk-through museum, a sky of stars, a time machine and a quiz.
 
+**Live site: https://legacy-3-d.vercel.app**
+
+![The Legacy home page, with the 3D globe](docs/screenshots/home.jpg)
+
+| | |
+|---|---|
+| ![Legends gallery](docs/screenshots/legends.jpg) | ![A legend's story page](docs/screenshots/story.jpg) |
+| ![Timeline](docs/screenshots/timeline.jpg) | ![Quiz](docs/screenshots/quiz.jpg) |
+
 Built with React, Vite and three.js (via React Three Fiber). Everything the site shows is stored in this project, so visitors never depend on an outside service (apart from Google Fonts).
 
 ## Pages
@@ -16,7 +25,7 @@ Built with React, Vite and three.js (via React Three Fiber). Everything the site
 | **Timeline** | Six centuries of lifespans on one scrolling line. |
 | **Quiz** | Three modes: clues, blurred photo, and "who was born first?". |
 
-Pages have their own addresses (for example `#/quiz`, `#/time-machine/1905`, `#legend/marie-curie`), so any of them can be shared as a link.
+Pages have their own addresses (for example `/quiz`, `/time-machine/1905`, `/legend/marie-curie`), so any of them can be shared as a link or found in search. Older links that used `#/quiz` or `#legend/marie-curie` still work and are redirected. On phones, the **Share** button on a legend's page and the quiz's **Share your score** button open the phone's share sheet.
 
 ## Running it
 
@@ -42,6 +51,17 @@ npm run build    # the finished site, in dist/
 
 Please keep these credits if you change or publish the site.
 
-## Before publishing
+## Publishing
 
-- In `index.html`, change the link-preview image (`og:image`) to its full web address once the site has one, e.g. `https://your-site.vercel.app/og-image.jpg`.
+The site is a static build, hosted on [Vercel](https://vercel.com). Every push to `main` on GitHub redeploys it.
+
+- `vercel.json` sends every address (such as `/legend/marie-curie`) to the app, so shared links open the right page.
+- Visitor numbers come from Vercel Web Analytics (Vercel project → Analytics). It uses no cookies.
+- `public/sitemap.xml` lists every page and legend for search engines; `public/robots.txt` points to it. Add the site to [Google Search Console](https://search.google.com/search-console) and submit the sitemap.
+
+**If the site moves to a new domain** (for example a custom one), replace `legacy-3-d.vercel.app` in:
+
+1. `index.html` — the canonical link and the `og:url`, `og:image` and `twitter:image` tags (link previews need full web addresses).
+2. `public/sitemap.xml` and `public/robots.txt`.
+
+After adding a legend, add its `/legend/<name>` address to `public/sitemap.xml` too.

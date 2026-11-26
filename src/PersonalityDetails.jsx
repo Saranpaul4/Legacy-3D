@@ -23,11 +23,22 @@ export default function PersonalityDetails({
   useTilt(portraitRef)
   const [copied, setCopied] = useState(false)
 
-  const copyLink = async () => {
-    const url = `${window.location.origin}${window.location.pathname}#legend/${getSlug(person)}`
+  // phones open the share sheet; computers copy the link
+  const canShare = typeof navigator !== 'undefined' && Boolean(navigator.share)
+  const shareLink = async () => {
+    const url = `${window.location.origin}/legend/${getSlug(person)}`
     try {
+      if (canShare) {
+        await navigator.share({
+          title: `${person.name} — Legacy`,
+          text: `${person.name} — ${person.title}. Read their story on Legacy.`,
+          url,
+        })
+        return
+      }
       await navigator.clipboard.writeText(url)
-    } catch {
+    } catch (err) {
+      if (err?.name === 'AbortError') return // closed the share sheet
       window.prompt('Copy this link:', url)
     }
     setCopied(true)
@@ -57,8 +68,8 @@ export default function PersonalityDetails({
           ← Back to the gallery
         </button>
         <div className="details-actions-right">
-          <button className="secondary-button" onClick={copyLink} aria-live="polite">
-            {copied ? 'Link copied' : 'Copy link'}
+          <button className="secondary-button" onClick={shareLink} aria-live="polite">
+            {copied ? 'Link copied' : canShare ? 'Share' : 'Copy link'}
           </button>
           <button
             className={`favourite-button ${saved ? 'saved' : ''}`}

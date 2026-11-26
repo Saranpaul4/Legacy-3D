@@ -119,7 +119,7 @@ export default function LegendQuiz({ onSelectPerson }) {
 
   // phones get the system share sheet; desktops copy the text instead
   const shareScore = async () => {
-    const url = `${window.location.origin}${window.location.pathname}#/quiz`
+    const url = `${window.location.origin}/quiz`
     const text = `I scored ${score}/${MAX_SCORE} on Legacy's "${modeInfo.label}" quiz. Can you beat me?`
     try {
       if (navigator.share) {

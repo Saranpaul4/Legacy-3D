@@ -16,9 +16,9 @@ const ordinal = (n) => {
 // what one legend was doing in a given year, if their story says
 const momentIn = (person, year) => person.timeline?.find((t) => Number(t.year) === year)?.event
 
-// the year in the address, e.g. #/time-machine/1905
+// the year in the address, e.g. /time-machine/1905
 const yearFromAddress = () => {
-  const match = /time-machine\/(\d{3,4})$/.exec(window.location.hash)
+  const match = /time-machine\/(\d{3,4})$/.exec(window.location.pathname)
   const year = match ? Number(match[1]) : 1905
   return Math.min(CURRENT_YEAR, Math.max(FIRST_YEAR, year))
 }
@@ -32,7 +32,7 @@ export default function TimeMachine({ onSelectPerson }) {
 
   // keep the address in step so a year can be shared (no page jump)
   useEffect(() => {
-    window.history.replaceState(null, '', `#/time-machine/${year}`)
+    window.history.replaceState(null, '', `/time-machine/${year}`)
   }, [year])
 
   // which years have stored events at all

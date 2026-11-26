@@ -30,16 +30,58 @@ const Sky = lazy(() => import('./Sky'))
 // Look for portrait photos as soon as the app loads
 detectPortraits()
 
-// Each page has its own address, e.g. #/quiz, so links can be shared
+// Each page has its own address, e.g. /quiz, so links can be shared
 // and the browser's Back button moves between pages.
 const PAGES = [
-  { id: 'home', label: 'Home', title: 'Legacy — The people who changed the world' },
-  { id: 'legends', label: 'Legends', title: 'Legends — Legacy' },
-  { id: 'museum', label: 'Museum', title: 'Museum — Legacy' },
-  { id: 'sky', label: 'Sky', title: 'Sky of Legends — Legacy' },
-  { id: 'time-machine', label: 'Time Machine', title: 'Time Machine — Legacy' },
-  { id: 'timeline', label: 'Timeline', title: 'Timeline — Legacy' },
-  { id: 'quiz', label: 'Quiz', title: 'Quiz — Legacy' },
+  {
+    id: 'home',
+    label: 'Home',
+    title: 'Legacy — The people who changed the world',
+    description:
+      'An interactive archive of 32 scientists, leaders, artists, innovators and sports legends. Explore their lives on a 3D globe, follow them through time, compare them and test yourself with a quiz.',
+  },
+  {
+    id: 'legends',
+    label: 'Legends',
+    title: 'Legends — Legacy',
+    description:
+      'Browse 32 scientists, leaders, artists, innovators and sports legends. Search by name, filter by field and open any portrait to read their story.',
+  },
+  {
+    id: 'museum',
+    label: 'Museum',
+    title: 'Museum — Legacy',
+    description:
+      'Walk through a 3D gallery of 32 legends, hung in order of birth, and travel through history as you go.',
+  },
+  {
+    id: 'sky',
+    label: 'Sky',
+    title: 'Sky of Legends — Legacy',
+    description:
+      'Every legend is a star and each field is a constellation, joined in order of birth. Explore the sky of legends.',
+  },
+  {
+    id: 'time-machine',
+    label: 'Time Machine',
+    title: 'Time Machine — Legacy',
+    description:
+      'Pick any year to see which legends were alive, how old they were and what happened in the world that year.',
+  },
+  {
+    id: 'timeline',
+    label: 'Timeline',
+    title: 'Timeline — Legacy',
+    description:
+      'Six centuries of lifespans on one scrolling line: see how the lives of 32 legends overlap.',
+  },
+  {
+    id: 'quiz',
+    label: 'Quiz',
+    title: 'Quiz — Legacy',
+    description:
+      'Test what you know about the legends: guess from clues, from a blurred photo, or who was born first.',
+  },
 ]
 const PAGE_IDS = new Set(PAGES.map((p) => p.id))
 
@@ -55,24 +97,54 @@ const OLD_ADDRESSES = {
 const YEAR = new Date().getFullYear()
 const oldest = personalities.reduce((a, b) => (a.born < b.born ? a : b))
 
-// Read the address: "#/quiz" -> quiz page, "#legend/marie-curie" -> her story
-function readRoute() {
-  const hash = window.location.hash.replace(/^#\/?/, '')
-  const legend = /^legend\/([a-z0-9-]+)$/.exec(hash)
-  if (legend) {
-    const person = personalities.find((p) => getSlug(p) === legend[1])
+// Work out the page from an address such as "/quiz" or "/legend/marie-curie"
+function routeFromPath(path) {
+  const parts = path.replace(/^\/+|\/+$/g, '').split('/')
+  if (parts[0] === 'legend' && parts[1]) {
+    const person = personalities.find((p) => getSlug(p) === parts[1])
     if (person) return { page: 'legends', person }
   }
-  const first = hash.split('/')[0] // "time-machine/1905" -> "time-machine"
-  const id = OLD_ADDRESSES[first] ?? first
+  const first = parts[0] // "time-machine/1905" -> "time-machine"
+  const id = first === '' ? 'home' : OLD_ADDRESSES[first] ?? first
   // old "About" links land on the About part at the bottom of Home
-  const anchor = hash === 'about' ? 'about' : null
+  const anchor = first === 'about' ? 'about' : null
   return { page: PAGE_IDS.has(id) ? id : 'home', person: null, anchor }
 }
 
-const go = (hash) => {
-  if (window.location.hash === hash) window.scrollTo({ top: 0, behavior: 'smooth' })
-  else window.location.hash = hash
+// Links shared before the site had real addresses look like "#/quiz" or
+// "#legend/marie-curie". They are turned into "/quiz" and "/legend/marie-curie".
+function readRoute() {
+  const { pathname, hash } = window.location
+  const old = hash.replace(/^#\/?/, '')
+  if (old && pathname === '/') {
+    const parts = old.split('/')
+    const mapped = parts[0] === 'about' ? 'about' : OLD_ADDRESSES[parts[0]] ?? parts[0]
+    const path = mapped === 'home' && parts.length === 1 ? '/' : '/' + [mapped, ...parts.slice(1)].join('/')
+    window.history.replaceState(null, '', path)
+    return routeFromPath(path)
+  }
+  return routeFromPath(pathname)
+}
+
+// Move to another page without reloading it
+const go = (path) => {
+  if (window.location.pathname === path) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    return
+  }
+  window.history.pushState(null, '', path)
+  window.dispatchEvent(new PopStateEvent('popstate'))
+}
+
+// Set one <meta> or <link> tag's value (the tag is created if it is missing)
+function setHead(selector, attr, value, make) {
+  let el = document.head.querySelector(selector)
+  if (!el) {
+    el = document.createElement(make.tag)
+    Object.entries(make.attrs).forEach(([k, v]) => el.setAttribute(k, v))
+    document.head.appendChild(el)
+  }
+  el.setAttribute(attr, value)
 }
 
 function Loader({ visible }) {
@@ -140,8 +212,23 @@ function App() {
       setMenuOpen(false)
       window.scrollTo({ top: 0, behavior: 'instant' })
     }
-    window.addEventListener('hashchange', onChange)
-    return () => window.removeEventListener('hashchange', onChange)
+    window.addEventListener('popstate', onChange)
+    return () => window.removeEventListener('popstate', onChange)
+  }, [])
+
+  // links like <a href="/quiz"> move between pages without a full reload
+  useEffect(() => {
+    const onClick = (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      const link = e.target.closest?.('a[href^="/"]')
+      if (!link || link.target === '_blank' || link.hasAttribute('download')) return
+      const url = new URL(link.href)
+      if (url.origin !== window.location.origin || /\.[a-z0-9]+$/i.test(url.pathname)) return
+      e.preventDefault()
+      go(url.pathname)
+    }
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
   }, [])
 
   // jump to a part of a page once it has been drawn (e.g. About on Home)
@@ -149,11 +236,21 @@ function App() {
     if (route.anchor) document.getElementById(route.anchor)?.scrollIntoView({ behavior: 'smooth' })
   }, [route])
 
-  // the browser tab shows which page you're on
+  // the tab title, search-result text and share preview follow the page
   useEffect(() => {
-    document.title = selectedPerson
-      ? `${selectedPerson.name} — Legacy`
-      : PAGES.find((p) => p.id === page)?.title ?? PAGES[0].title
+    const info = PAGES.find((p) => p.id === page) ?? PAGES[0]
+    const title = selectedPerson ? `${selectedPerson.name} — Legacy` : info.title
+    const description = selectedPerson
+      ? `${selectedPerson.name} — ${selectedPerson.title}. ${selectedPerson.description}`.slice(0, 158)
+      : info.description
+    const path = selectedPerson ? `/legend/${getSlug(selectedPerson)}` : page === 'home' ? '/' : window.location.pathname
+    const url = `${window.location.origin}${path}`
+    document.title = title
+    setHead('meta[name="description"]', 'content', description, { tag: 'meta', attrs: { name: 'description' } })
+    setHead('meta[property="og:title"]', 'content', title, { tag: 'meta', attrs: { property: 'og:title' } })
+    setHead('meta[property="og:description"]', 'content', description, { tag: 'meta', attrs: { property: 'og:description' } })
+    setHead('meta[property="og:url"]', 'content', url, { tag: 'meta', attrs: { property: 'og:url' } })
+    setHead('link[rel="canonical"]', 'href', url, { tag: 'link', attrs: { rel: 'canonical' } })
   }, [page, selectedPerson])
 
   // BACK-TO-TOP BUTTON + navbar border after scrolling
@@ -172,8 +269,8 @@ function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
-  const openPerson = (person) => go(`#legend/${getSlug(person)}`)
-  const closePerson = () => go('#/legends')
+  const openPerson = (person) => go(`/legend/${getSlug(person)}`)
+  const closePerson = () => go('/legends')
 
   // RANDOM LEGEND — never the one already open
   const openRandom = () => {
@@ -186,7 +283,7 @@ function App() {
     PAGES.map(({ id, label }) => (
       <a
         key={id}
-        href={`#/${id}`}
+        href={id === 'home' ? '/' : `/${id}`}
         className={page === id ? 'active' : ''}
         aria-current={page === id ? 'page' : undefined}
         onClick={onClick}
@@ -201,14 +298,14 @@ function App() {
 
       {/* NAVIGATION */}
       <nav className="navbar" aria-label="Main">
-        <a href="#/home" className="logo">
+        <a href="/" className="logo">
           Legacy<span>.</span>
         </a>
 
         <div className="nav-links">{navLinks()}</div>
 
         <div className="nav-right">
-          <button className="nav-button" onClick={() => go('#/legends')}>
+          <button className="nav-button" onClick={() => go('/legends')}>
             Explore the legends
           </button>
 
@@ -272,10 +369,10 @@ function App() {
               </p>
 
               <div className="hero-buttons">
-                <a href="#/legends" className="primary-button">
+                <a href="/legends" className="primary-button">
                   Meet the legends
                 </a>
-                <a href="#/timeline" className="secondary-button">
+                <a href="/timeline" className="secondary-button">
                   See the timeline
                 </a>
               </div>
@@ -363,7 +460,7 @@ function App() {
       </div>
 
       <footer>
-        <a href="#/home" className="logo">Legacy<span>.</span></a>
+        <a href="/" className="logo">Legacy<span>.</span></a>
         <nav aria-label="Footer">{navLinks()}</nav>
         <p>Celebrating the people who changed the world. © {YEAR}</p>
       </footer>
