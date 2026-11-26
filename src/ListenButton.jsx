@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { isLiving } from './data/personalities'
 
 const supported = typeof window !== 'undefined' && 'speechSynthesis' in window
-const VOICE_KEY = 'legacy-voice'
+const VOICE_KEY = 'legacy-voice-gender'
 const RATE_KEY = 'legacy-voice-rate'
 
 const RATES = [
@@ -42,32 +42,32 @@ function saveSetting(key, value) {
   }
 }
 
-// English voices only, best-sounding first (natural/online voices are clearer)
+// English voices only
 function englishVoices() {
-  const quality = (v) => (/natural|neural|google|online/i.test(v.name) ? 0 : 1)
-  return window.speechSynthesis
-    .getVoices()
-    .filter((v) => /^en/i.test(v.lang))
-    .sort((a, b) => quality(a) - quality(b) || a.name.localeCompare(b.name))
+  return window.speechSynthesis.getVoices().filter((v) => /^en/i.test(v.lang))
 }
 
-// "Microsoft Neerja Online (Natural) - English (India)" -> "Neerja (India, natural)"
-function voiceLabel(v) {
-  const region = /\(([^)]+)\)\s*$/.exec(v.name)?.[1] || v.lang
-  const name = v.name
-    .replace(/^(Microsoft|Google|Apple)\s+/i, '')
-    .replace(/\s+Online.*$/i, '')
-    .replace(/\s*-\s*English.*$/i, '')
-    .replace(/\s*\(.*\)\s*$/, '')
-    .trim()
-  const natural = /natural|neural/i.test(v.name) ? ', natural' : ''
-  return `${name || v.name} (${region.replace(/^English\s*/i, '')}${natural})`
+// Known first names, so one female and one male voice can be picked automatically
+const FEMALE = /neerja|aria|jenny|sonia|libby|natasha|heera|zira|samantha|female|hazel|susan/i
+const MALE = /prabhat|guy|ryan|davis|christopher|eric|ravi|mark|david|daniel|male/i
+
+// The best installed voice for a gender: natural/online first, Indian English next
+function pickVoice(voices, gender) {
+  const wanted = gender === 'male' ? MALE : FEMALE
+  const other = gender === 'male' ? FEMALE : MALE
+  const score = (v) =>
+    (/natural|neural|online/i.test(v.name) ? 0 : 10) +
+    (/en-IN/i.test(v.lang) ? 0 : 2) +
+    (/google/i.test(v.name) ? 1 : 0)
+  const matches = voices.filter((v) => wanted.test(v.name) && !other.test(v.name.replace(wanted, '')))
+  const pool = matches.length ? matches : voices.filter((v) => wanted.test(v.name))
+  return [...pool].sort((a, b) => score(a) - score(b))[0] || null
 }
 
 export default function ListenButton({ person }) {
   const [state, setState] = useState('idle') // idle | playing | paused
   const [voices, setVoices] = useState(() => (supported ? englishVoices() : []))
-  const [voiceURI, setVoiceURI] = useState(() => readSetting(VOICE_KEY, ''))
+  const [gender, setGender] = useState(() => readSetting(VOICE_KEY, 'female'))
   const [rate, setRate] = useState(() => Number(readSetting(RATE_KEY, 0.95)))
 
   // voices often arrive a moment after the page loads
@@ -91,12 +91,8 @@ export default function ListenButton({ person }) {
 
   if (!supported) return null
 
-  const selectedVoice =
-    voices.find((v) => v.voiceURI === voiceURI) ||
-    voices.find((v) => /en-IN/i.test(v.lang) && /natural|google|neural/i.test(v.name)) ||
-    voices.find((v) => /en-IN/i.test(v.lang)) ||
-    voices[0] ||
-    null
+  const voiceFor = (g) => pickVoice(voices, g) || voices[0] || null
+  const selectedVoice = voiceFor(gender)
 
   const speak = (voice = selectedVoice, speed = rate) => {
     const synth = window.speechSynthesis
@@ -139,10 +135,10 @@ export default function ListenButton({ person }) {
   }
 
   // changing the voice or speed while it's talking restarts with the new setting
-  const changeVoice = (uri) => {
-    setVoiceURI(uri)
-    saveSetting(VOICE_KEY, uri)
-    if (state !== 'idle') speak(voices.find((v) => v.voiceURI === uri), rate)
+  const changeVoice = (g) => {
+    setGender(g)
+    saveSetting(VOICE_KEY, g)
+    if (state !== 'idle') speak(voiceFor(g), rate)
   }
 
   const changeRate = (value) => {
@@ -183,15 +179,9 @@ export default function ListenButton({ person }) {
         <div className="listen-settings">
           <label>
             <span>Voice</span>
-            <select
-              value={selectedVoice?.voiceURI || ''}
-              onChange={(e) => changeVoice(e.target.value)}
-            >
-              {voices.map((v) => (
-                <option key={v.voiceURI} value={v.voiceURI}>
-                  {voiceLabel(v)}
-                </option>
-              ))}
+            <select value={gender} onChange={(e) => changeVoice(e.target.value)}>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
             </select>
           </label>
 
