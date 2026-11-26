@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Float, Stars, useTexture, Html } from '@react-three/drei'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import useInView from './hooks/useInView'
 import * as THREE from 'three'
 import { personalities, CATEGORY_COLORS } from './data/personalities'
@@ -8,6 +8,7 @@ import { personalities, CATEGORY_COLORS } from './data/personalities'
 const EARTH_RADIUS = 1.25
 const PIN_RADIUS = EARTH_RADIUS * 1.012
 const noRaycast = () => null // decorative meshes should never block a click
+const isTouch = () => window.matchMedia('(pointer: coarse)').matches
 
 // latitude/longitude -> a point on the sphere (matches three.js sphere UVs)
 function latLngToVector(lat, lng, radius) {
@@ -60,10 +61,15 @@ function BirthplacePin({ person, hovered, onHover, onSelect }) {
         }}
         onClick={(e) => {
           e.stopPropagation()
+          // on a phone the first tap shows who it is, the second opens the story
+          if (isTouch() && !hovered) {
+            onHover(person)
+            return
+          }
           onSelect?.(person)
         }}
       >
-        <sphereGeometry args={[0.06, 12, 12]} />
+        <sphereGeometry args={[isTouch() ? 0.11 : 0.06, 12, 12]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
 
@@ -158,22 +164,28 @@ export default function LegacyScene({ onSelectPerson, theme = 'dark' }) {
   const [hoveredPin, setHoveredPin] = useState(null)
   const wrapRef = useRef(null)
   const inView = useInView(wrapRef)
-  // on touch screens, dragging the globe would trap the page scroll,
-  // so there it just turns by itself (pins can still be tapped)
-  const [touch] = useState(() => window.matchMedia('(pointer: coarse)').matches)
+  const [touch] = useState(() => isTouch())
+  const controlsRef = useRef(null)
+
+  // on a phone, only sideways drags turn the globe; up/down still scrolls the page
+  useEffect(() => {
+    const el = controlsRef.current?.domElement
+    if (touch && el) el.style.touchAction = 'pan-y'
+  })
 
   return (
     <div ref={wrapRef} style={{ width: '100%', height: '100%' }}>
     <Canvas
       camera={{ position: [0, 0, 6.4], fov: 45 }}
-      dpr={[1, 2]}
+      dpr={touch ? [1, 1.5] : [1, 2]}
+      onPointerMissed={() => setHoveredPin(null)}
       frameloop={inView ? 'always' : 'never'}
     >
       <ambientLight intensity={2} />
       <pointLight position={[3, 4, 5]} intensity={4} color="#ffffff" />
       <pointLight position={[-5, -3, 2]} intensity={1.5} color="#c6a15b" />
 
-      {theme !== 'light' && <Stars radius={80} depth={50} count={900} factor={4} fade speed={1} />}
+      {theme !== 'light' && <Stars radius={80} depth={50} count={touch ? 500 : 900} factor={4} fade speed={1} />}
 
       <LegacyObject
         hoveredPin={hoveredPin}
@@ -183,13 +195,15 @@ export default function LegacyScene({ onSelectPerson, theme = 'dark' }) {
       />
       <EnergyParticles color={faint} />
 
-      {!touch && <OrbitControls
+      <OrbitControls
+        ref={controlsRef}
         enableZoom={false}
         enablePan={false}
         autoRotate={!hoveredPin}
         autoRotateSpeed={0.3}
-        rotateSpeed={0.6}
-      />}
+        rotateSpeed={touch ? 0.8 : 0.6}
+        touches={{ ONE: THREE.TOUCH.ROTATE }}
+      />
     </Canvas>
     </div>
   )

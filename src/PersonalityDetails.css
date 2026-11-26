@@ -309,7 +309,7 @@
   }
 
   .details-image {
-    max-width: 340px;
+    max-width: 280px;
   }
 
   .biography-section {
@@ -318,6 +318,15 @@
 }
 
 @media (max-width: 500px) {
+  /* smaller portrait on phones so the story starts sooner */
+  .details-image {
+    max-width: 220px;
+  }
+
+  .details-image img {
+    padding: 8px;
+  }
+
   .details-info {
     grid-template-columns: 1fr;
   }
